@@ -21,18 +21,11 @@
 
 - name : download student war file
   unarchive:
-    src: https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.42/bin/apache-tomcat-8.5.42.tar.gz
+    src: https://archive.apache.org/dist/tomcat/tomcat-8/v{{out.stdout}}/bin/apache-tomcat-{{out.stdout}}.tar.gz
     dest: "{{app_home}}"
     remote_src : yes
   become_user : student 
 
-- name : Remove old war files
-  file :
-    path : "{{item}}"
-    state : absent
-  loop : 
-    - "{{TOMCAT_HOME}}/webapps/student.war"
-    - "{{TOMCAT_HOME}}/webapps/student"
 
 
 - name : Download student application 
@@ -40,3 +33,10 @@
     url : https://s3-us-west-2.amazonaws.com/studentapi-cit/student.war 
     dest : "{{TOMCAT_HOME}}/webapps/student.war"
   become_user : student       
+
+
+- name: Restart Tomcat 
+  service:
+    name: tomcat 
+    state: restarted 
+    enabled: yes 

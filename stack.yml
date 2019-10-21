@@ -1,0 +1,6 @@
+---
+- name : student application
+  hosts : localhost
+  become : yes
+  roles : 
+    - apache

@@ -39,5 +39,4 @@
   get_url : 
     url : https://s3-us-west-2.amazonaws.com/studentapi-cit/student.war 
     dest : "{{TOMCAT_HOME}}/webapps/student.war"
-    remote_src: yes
   become_user : student       

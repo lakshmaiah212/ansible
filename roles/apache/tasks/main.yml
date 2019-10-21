@@ -9,6 +9,8 @@
   copy :
     src : roles/apache/files/student.proxy.conf
     dest : /etc/httpd/conf.d/student_proxy.conf
+  vars :
+    - student
 
 
 

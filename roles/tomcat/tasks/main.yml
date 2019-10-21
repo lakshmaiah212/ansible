@@ -1,0 +1,43 @@
+---
+- name : installing java
+  yum : 
+    name : java
+    state : latest
+
+- name : create app user 
+  user : 
+    name : student
+    create : yes
+
+
+- name : Download tomcat latest version 
+  shell : curl -s http://tomcat.apache.org/ | grep Released | grep 'Tomcat [0-9]' | awk '{print $(NF-1)}' | grep ^8
+  register : out 
+
+-  name : declare varaiables
+   set_fact : 
+    TOMCAT_HOME : '/home/student/apache-tomcat-{{out.stdout}}'
+    app_home : '/home/student'
+
+- name : download student war file
+  unarchive:
+    src: https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.42/bin/apache-tomcat-8.5.42.tar.gz
+    dest: "{{app_home}}"
+    remote_src : yes
+  become_user : student 
+
+- name : Remove old war files
+  file :
+    path : "{{item}}"
+    state : absent
+  loop : 
+    - "{{TOMCAT_HOME}}/webapps/student.war"
+    - "{{TOMCAT_HOME}}/webapps/student"
+
+
+- name : Download student application 
+  get_url : 
+    url : https://s3-us-west-2.amazonaws.com/studentapi-cit/student.war 
+    dest : "{{TOMCAT_HOME}}/webapps/student.war"
+    remote_src: yes
+  become_user : student       

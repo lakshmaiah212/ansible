@@ -7,7 +7,7 @@
 - name : create app user 
   user : 
     name : student
-    create : yes
+    state : present
 
 
 - name : Download tomcat latest version 
